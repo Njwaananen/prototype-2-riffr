@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riffr – My Profile</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #181824;
+      --accent: #8f5bff;
+      --accent-soft: rgba(143, 91, 255, 0.12);
+      --text: #f6f6ff;
+      --muted: #b5b5d0;
+      --border: #2c2c3a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #202044 0, #050509 55%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 15, 0.9),
+        rgba(5, 5, 15, 0.6)
+      );
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:first-child { margin-left: 0; }
+
+    nav a:hover { color: var(--text); }
+
+    nav a[href="profile.html"] {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.2rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .panel {
+      margin-top: 1.5rem;
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.5rem 1.6rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    form {
+      display: grid;
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    input,
+    textarea,
+    select {
+      margin-top: 0.25rem;
+      width: 100%;
+      max-width: 480px;
+      padding: 0.45rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #10101a;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    .inline {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    button[type="submit"] {
+      margin-top: 0.6rem;
+      padding: 0.5rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      filter: brightness(1.05);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(143, 91, 255, 0.7);
+      font-size: 0.7rem;
+      color: var(--text);
+      margin-left: 0.35rem;
+    }
+
+    .note {
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-shell">
+      <div class="logo">Riffr • Profile</div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="browse.html">Browse</a>
+        <a href="profile.html">My Profile</a>
+        <a href="saved.html">Saved</a>
+        <a href="messages.html">Messages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>My profile</h1>
+      <p>
+        This is what collaborators will see when they discover you on Riffr.
+        Update your info and make sure your bio sells your sound.
+      </p>
+    </div>
+
+    <section class="panel">
+      <h2>Public profile</h2>
+      <form id="profile-form" novalidate>
+        <div>
+          <label>
+            Display name
+            <input type="text" name="display_name" required />
+          </label>
+          <div class="hint">Use the artist name you release music under.</div>
+        </div>
+
+        <div>
+          <label>
+            Headline
+            <input
+              type="text"
+              name="headline"
+              placeholder="Rapper & songwriter looking for producers"
+              required
+            />
+          </label>
+          <div class="hint">Short one-line summary of what you do.</div>
+        </div>
+
+        <div>
+          <label>
+            Bio
+            <textarea
+              name="bio"
+              minlength="10"
+              required
+              placeholder="Tell collaborators what you’re into, your experience level, and what you’re looking for."
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="inline">
+          <div>
+            <label>
+              Location
+              <input type="text" name="location_text" required />
+            </label>
+          </div>
+          <div>
+            <label>
+              Primary role
+              <select name="primary_role" required>
+                <option value="">Select a role…</option>
+                <option value="vocalist">Vocalist</option>
+                <option value="producer">Producer</option>
+                <option value="engineer">Engineer</option>
+                <option value="songwriter">Songwriter</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label>
+            Main genres <span class="pill">Tag-style input coming later</span>
+            <input
+              type="text"
+              name="genres"
+              placeholder="Hip-hop, R&B"
+              required
+            />
+          </label>
+        </div>
+
+        <button type="submit">Save profile</button>
+        <div class="note">
+          This save is local only in Prototype 2 – in a later prototype
+          it’ll write to your Riffr API.
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("profile-form");
+
+    form.addEventListener("submit", (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        alert(
+          "Please fill out all required fields. Make sure your bio is at least 10 characters long."
+        );
+        return;
+      }
+      e.preventDefault();
+      alert("Profile saved locally! (Client-side validation demo for Prototype 2)");
+    });
+  </script>
+</body>
+</html>

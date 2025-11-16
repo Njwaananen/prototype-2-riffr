@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riffr – Browse Profiles</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #181824;
+      --accent: #8f5bff;
+      --accent-soft: rgba(143, 91, 255, 0.12);
+      --text: #f6f6ff;
+      --muted: #b5b5d0;
+      --border: #2c2c3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #202044 0, #050509 55%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 15, 0.9),
+        rgba(5, 5, 15, 0.6)
+      );
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:first-child {
+      margin-left: 0;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    nav a[href="browse.html"] {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.2rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      align-items: flex-end;
+      margin-bottom: 1.25rem;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0.3rem 0 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .filters label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="search"] {
+      background: var(--bg-soft);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="search"]:focus {
+      border-color: var(--accent);
+    }
+
+    input[type="search"] {
+      min-width: 180px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(260px, 1.4fr);
+      gap: 1.4rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .filters {
+        justify-content: flex-start;
+      }
+    }
+
+    .panel {
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.02rem;
+    }
+
+    .panel p {
+      margin: 0 0 0.75rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* Profile cards */
+    #profiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    .profile-card {
+      background: radial-gradient(circle at top, #262649, #151522);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .profile-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .profile-tagline {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .profile-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .chips {
+      margin-top: 0.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .chip {
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .empty,
+    .error,
+    .loading {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 0.25rem 0;
+    }
+
+    /* Sidebar */
+    .sidebar-section {
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.4rem 0 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .sidebar-list li {
+      padding: 0.2rem 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(143, 91, 255, 0.8);
+      font-size: 0.7rem;
+      color: var(--text);
+      margin-left: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-shell">
+      <div class="logo">Riffr • Browse collaborators</div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="browse.html">Browse</a>
+        <a href="profile.html">My Profile</a>
+        <a href="saved.html">Saved</a>
+        <a href="messages.html">Messages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div>
+        <h1>Browse collaborators</h1>
+        <p>
+          Discover vocalists, producers, and engineers who match your genres and
+          working style. Results below are loaded from your live Riffr API.
+        </p>
+      </div>
+
+      <div class="filters">
+        <label>
+          Genre:
+          <select id="genre-filter">
+            <option value="all">All</option>
+            <option value="hip-hop">Hip-hop</option>
+            <option value="r&b">R&amp;B</option>
+            <option value="pop">Pop</option>
+          </select>
+        </label>
+
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search by name or bio…"
+        />
+      </div>
+    </div>
+
+    <section class="layout">
+      <div class="panel">
+        <h2>Matching profiles</h2>
+        <p id="results-summary">
+          Loading matches from API…
+        </p>
+        <div id="profiles" class="loading">Loading…</div>
+      </div>
+
+      <aside class="panel">
+        <div class="sidebar-section">
+          <h2>Your preferences</h2>
+          <ul class="sidebar-list">
+            <li>Primary role: Vocalist</li>
+            <li>Looking for: Producer, mixing engineer</li>
+            <li>Location bias: Remote-first</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h2>Smart suggestions</h2>
+          <ul class="sidebar-list">
+            <li>
+              Try filtering by <strong>Hip-hop</strong>
+              <span class="badge">New</span>
+            </li>
+            <li>R&amp;B vocalists with high response rates</li>
+            <li>Producers similar to your saved collaborators</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:3000/api";
+
+    const profilesEl = document.getElementById("profiles");
+    const summaryEl = document.getElementById("results-summary");
+    const genreSelect = document.getElementById("genre-filter");
+    const searchInput = document.getElementById("search-input");
+
+    let allProfiles = [];
+
+    async function fetchProfiles() {
+      profilesEl.textContent = "Loading…";
+      profilesEl.className = "loading";
+      summaryEl.textContent = "Loading matches from API…";
+
+      const genre = genreSelect.value;
+      const isAll = genre === "all";
+
+      const url = isAll
+        ? `${API_BASE}/profiles`
+        : `${API_BASE}/profiles/search/by-genre?genre=${encodeURIComponent(
+            genre
+          )}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        allProfiles = Array.isArray(data) ? data : [];
+        renderProfiles();
+      } catch (err) {
+        console.error(err);
+        profilesEl.textContent =
+          "Failed to load profiles from API. Make sure your Node API is running.";
+        profilesEl.className = "error";
+        summaryEl.textContent = "Error loading matches.";
+      }
+    }
+
+    function renderProfiles() {
+      const query = searchInput.value.trim().toLowerCase();
+      let filtered = allProfiles;
+
+      if (query) {
+        filtered = allProfiles.filter((p) => {
+          const name = (p.display_name || "").toLowerCase();
+          const bio = (p.bio || "").toLowerCase();
+          return name.includes(query) || bio.includes(query);
+        });
+      }
+
+      if (!filtered.length) {
+        profilesEl.textContent = "No profiles matched your filters.";
+        profilesEl.className = "empty";
+        summaryEl.textContent = "0 matches found.";
+        return;
+      }
+
+      summaryEl.textContent = `${filtered.length} match${
+        filtered.length === 1 ? "" : "es"
+      } found.`;
+
+      profilesEl.className = "";
+      profilesEl.innerHTML = filtered
+        .map((p) => {
+          const location = p.location_text || "Location not specified";
+          const visibility = p.visibility || "public";
+          return `
+          <article class="profile-card">
+            <div class="profile-name">${p.display_name}</div>
+            <div class="profile-tagline">${p.bio ?? ""}</div>
+            <div class="chips">
+              <span class="chip">${location}</span>
+              <span class="chip">Visibility: ${visibility}</span>
+            </div>
+            <div class="profile-meta">
+              <span>ID: ${p.profile_id.slice(0, 8)}…</span>
+              <span>User: ${p.user_id.slice(0, 8)}…</span>
+            </div>
+          </article>
+        `;
+        })
+        .join("");
+    }
+
+    genreSelect.addEventListener("change", fetchProfiles);
+    searchInput.addEventListener("input", () => {
+      // Just re-filter client-side; no extra API call
+      renderProfiles();
+    });
+
+    // Initial load
+    fetchProfiles();
+  </script>
+</body>
+</html>

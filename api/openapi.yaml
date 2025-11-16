@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+  title: Riffr Prototype 2 API
+  version: "0.1.0"
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                example:
+                  ok: true
+
+  /api/profiles:
+    get:
+      summary: List public profiles
+      responses:
+        "200":
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProfileSummary"
+              examples:
+                sample:
+                  value:
+                    - profile_id: "ab0b00f8-34c7-44bc-a6ce-5662f813870e"
+                      user_id: "11111111-1111-1111-1111-111111111111"
+                      display_name: "Lana R."
+                      bio: "Hobbyist rapper looking for producers."
+                      location_text: "Los Angeles, CA"
+                      visibility: "public"
+                    - profile_id: "aace9a16-a3f8-4f45-9bcd-6e535968b91b"
+                      user_id: "22222222-2222-2222-2222-222222222222"
+                      display_name: "Marco B."
+                      bio: "Bedroom producer focused on trap & hip-hop."
+                      location_text: "Atlanta, GA"
+                      visibility: "public"
+    post:
+      summary: Create a new user + profile
+      description: >
+        Prototype endpoint that creates a user and linked profile in Supabase.
+        In Prototype 2 this is not wired to the UI yet, but is available for testing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProfileRequest"
+            example:
+              email: "newuser@example.com"
+              username: "new_user"
+              password: "super-secret"
+              display_name: "New Artist"
+              bio: "Rapper looking for producers."
+              location_text: "Sacramento, CA"
+      responses:
+        "201":
+          description: Created profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileSummary"
+        "409":
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/profiles/{profile_id}:
+    get:
+      summary: Get a single profile
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Profile found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileSummary"
+        "404":
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/profiles/search/by-genre:
+    get:
+      summary: Search profiles by genre name
+      parameters:
+        - in: query
+          name: genre
+          required: true
+          schema:
+            type: string
+          description: Case-insensitive genre name, e.g. "hip-hop".
+      responses:
+        "200":
+          description: Profiles that match the requested genre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProfileSummary"
+        "400":
+          description: Missing or invalid genre parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    ProfileSummary:
+      type: object
+      properties:
+        profile_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        bio:
+          type: string
+        location_text:
+          type: string
+        visibility:
+          type: string
+          enum: [public, private]
+      required:
+        - profile_id
+        - user_id
+        - display_name
+        - visibility
+
+    NewProfileRequest:
+      type: object
+      required:
+        - email
+        - username
+        - password
+        - display_name
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        display_name:
+          type: string
+        bio:
+          type: string
+        location_text:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

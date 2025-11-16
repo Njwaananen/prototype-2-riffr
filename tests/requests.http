@@ -1,0 +1,21 @@
+
+### VS Code/JetBrains HTTP client friendly requests
+@baseUrl = http://localhost:3001
+@auth = local-dev-key
+
+GET {{baseUrl}}/api/health
+x-api-key: {{auth}}
+
+###
+GET {{baseUrl}}/api/assignments
+x-api-key: {{auth}}
+
+###
+POST {{baseUrl}}/api/assignments
+x-api-key: {{auth}}
+Content-Type: application/json
+
+{
+  "title": "Prototype 2",
+  "dueDate": "2025-10-01T00:00:00Z"
+}

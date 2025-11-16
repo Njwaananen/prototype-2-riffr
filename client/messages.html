@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riffr – Messages</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #181824;
+      --accent: #8f5bff;
+      --accent-soft: rgba(143, 91, 255, 0.12);
+      --text: #f6f6ff;
+      --muted: #b5b5d0;
+      --border: #2c2c3a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #202044 0, #050509 55%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 15, 0.9),
+        rgba(5, 5, 15, 0.6)
+      );
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:first-child { margin-left: 0; }
+
+    nav a:hover { color: var(--text); }
+
+    nav a[href="messages.html"] {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.2rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .layout {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(260px, 1.4fr) minmax(0, 2.3fr);
+      gap: 1.4rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    .panel p {
+      margin: 0 0 0.75rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* Conversation list */
+    .conversation-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.4rem 0 0;
+    }
+
+    .conversation {
+      padding: 0.55rem 0.4rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .conversation + .conversation {
+      margin-top: 0.3rem;
+    }
+
+    .conversation:hover {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: #141422;
+    }
+
+    .conversation.active {
+      border-color: rgba(143, 91, 255, 0.8);
+      background: var(--accent-soft);
+    }
+
+    .conv-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .conv-name {
+      font-weight: 600;
+    }
+
+    .conv-time {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .conv-snippet {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(143, 91, 255, 0.8);
+      font-size: 0.7rem;
+      color: var(--text);
+      margin-left: 0.35rem;
+    }
+
+    /* Message thread */
+    .thread-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .thread-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .thread-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .messages {
+      border-radius: 12px;
+      background: #10101a;
+      border: 1px solid var(--border);
+      padding: 0.8rem 0.9rem;
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+
+    .msg {
+      margin-bottom: 0.7rem;
+    }
+
+    .msg:last-child {
+      margin-bottom: 0;
+    }
+
+    .msg-author {
+      font-weight: 600;
+      font-size: 0.82rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .msg-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 0.2rem;
+    }
+
+    .msg-body {
+      margin: 0;
+    }
+
+    .reply-box {
+      margin-top: 0.9rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .reply-box textarea {
+      resize: vertical;
+      min-height: 60px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #10101a;
+      color: var(--text);
+      padding: 0.5rem 0.7rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .reply-box textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .reply-box button {
+      justify-self: flex-end;
+      padding: 0.45rem 1.2rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .reply-box button:hover {
+      filter: brightness(1.05);
+    }
+
+    .note {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-shell">
+      <div class="logo">Riffr • Messages</div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="browse.html">Browse</a>
+        <a href="profile.html">My Profile</a>
+        <a href="saved.html">Saved</a>
+        <a href="messages.html">Messages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Messages</h1>
+      <p>
+        Keep track of your ongoing collabs. In later prototypes this inbox will
+        be wired to real conversations from your API.
+      </p>
+    </div>
+
+    <section class="layout">
+      <!-- Left: conversation list -->
+      <aside class="panel">
+        <h2>Conversations</h2>
+        <p>Pick a collaborator to view the latest messages.</p>
+
+        <ul class="conversation-list">
+          <li class="conversation active" data-thread="lana">
+            <div class="conv-name-row">
+              <span class="conv-name">Lana R.<span class="badge">New</span></span>
+              <span class="conv-time">32 min ago</span>
+            </div>
+            <div class="conv-snippet">
+              “Dropped a new verse on your beat idea – want feedback?”
+            </div>
+          </li>
+
+          <li class="conversation" data-thread="marco">
+            <div class="conv-name-row">
+              <span class="conv-name">Marco B.</span>
+              <span class="conv-time">2 hrs ago</span>
+            </div>
+            <div class="conv-snippet">
+              “I sent over a beat pack. Let me know which one feels right for the hook.”
+            </div>
+          </li>
+
+          <li class="conversation" data-thread="ayana">
+            <div class="conv-name-row">
+              <span class="conv-name">Ayana V.</span>
+              <span class="conv-time">Yesterday</span>
+            </div>
+            <div class="conv-snippet">
+              “I love the chord progression you sent – can we try a slower tempo?”
+            </div>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Right: message thread -->
+      <section class="panel">
+        <div class="thread-header">
+          <div>
+            <div class="thread-title" id="thread-title">Chat with Lana R.</div>
+            <div class="thread-meta" id="thread-meta">
+              Hip-hop • Vocalist · Last message 32 min ago
+            </div>
+          </div>
+        </div>
+
+        <div class="messages" id="messages">
+          <!-- static demo messages -->
+          <div class="msg">
+            <div class="msg-author">
+              You
+              <span class="msg-meta">Yesterday · 7:42 PM</span>
+            </div>
+            <p class="msg-body">
+              I bounced a quick idea for the hook over your beat. Let me know if the cadence
+              feels right.
+            </p>
+          </div>
+
+          <div class="msg">
+            <div class="msg-author">
+              Lana R.
+              <span class="msg-meta">Today · 3:11 PM</span>
+            </div>
+            <p class="msg-body">
+              Dropped a new verse on your beat idea – want feedback? I tried matching the
+              energy of the second half.
+            </p>
+          </div>
+        </div>
+
+        <div class="reply-box">
+          <textarea
+            id="reply"
+            placeholder="Type a quick reply… (Prototype 2 keeps this local only)"
+          ></textarea>
+          <button type="button" id="send-btn">Send</button>
+          <div class="note">
+            In this prototype, sending only updates the thread on this page and does not
+            talk to the API yet.
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const conversations = document.querySelectorAll(".conversation");
+    const titleEl = document.getElementById("thread-title");
+    const metaEl = document.getElementById("thread-meta");
+    const messagesEl = document.getElementById("messages");
+    const replyInput = document.getElementById("reply");
+    const sendBtn = document.getElementById("send-btn");
+
+    // simple in-memory demo threads
+    const threads = {
+      lana: [
+        {
+          author: "You",
+          meta: "Yesterday · 7:42 PM",
+          body:
+            "I bounced a quick idea for the hook over your beat. Let me know if the cadence feels right.",
+        },
+        {
+          author: "Lana R.",
+          meta: "Today · 3:11 PM",
+          body:
+            "Dropped a new verse on your beat idea – want feedback? I tried matching the energy of the second half.",
+        },
+      ],
+      marco: [
+        {
+          author: "Marco B.",
+          meta: "Today · 12:05 PM",
+          body:
+            "I sent over a beat pack. Let me know which one feels right for the hook and I can bounce stems.",
+        },
+      ],
+      ayana: [
+        {
+          author: "Ayana V.",
+          meta: "Yesterday · 5:23 PM",
+          body:
+            "I love the chord progression you sent – can we try a slower tempo and some stacked harmonies?",
+        },
+      ],
+    };
+
+    function renderThread(id) {
+      const data = threads[id] || [];
+      let title = "Conversation";
+      let meta = "";
+
+      if (id === "lana") {
+        title = "Chat with Lana R.";
+        meta = "Hip-hop • Vocalist · Last message 32 min ago";
+      } else if (id === "marco") {
+        title = "Chat with Marco B.";
+        meta = "Producer · Last message 2 hrs ago";
+      } else if (id === "ayana") {
+        title = "Chat with Ayana V.";
+        meta = "R&B Vocalist · Last message yesterday";
+      }
+
+      titleEl.textContent = title;
+      metaEl.textContent = meta;
+
+      messagesEl.innerHTML = data
+        .map(
+          (m) => `
+          <div class="msg">
+            <div class="msg-author">
+              ${m.author}
+              <span class="msg-meta">${m.meta}</span>
+            </div>
+            <p class="msg-body">${m.body}</p>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    conversations.forEach((item) => {
+      item.addEventListener("click", () => {
+        conversations.forEach((c) => c.classList.remove("active"));
+        item.classList.add("active");
+        const id = item.getAttribute("data-thread");
+        renderThread(id);
+      });
+    });
+
+    sendBtn.addEventListener("click", () => {
+      const text = replyInput.value.trim();
+      if (!text) return;
+      const active = document.querySelector(".conversation.active");
+      const id = active ? active.getAttribute("data-thread") : "lana";
+
+      // push a fake "You" message to the current thread
+      threads[id] = threads[id] || [];
+      threads[id].push({
+        author: "You",
+        meta: "Just now",
+        body: text,
+      });
+      replyInput.value = "";
+      renderThread(id);
+    });
+
+    // initial render
+    renderThread("lana");
+  </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riffr – Saved Profiles</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #181824;
+      --accent: #8f5bff;
+      --accent-soft: rgba(143, 91, 255, 0.12);
+      --text: #f6f6ff;
+      --muted: #b5b5d0;
+      --border: #2c2c3a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #202044 0, #050509 55%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 15, 0.9),
+        rgba(5, 5, 15, 0.6)
+      );
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:first-child { margin-left: 0; }
+
+    nav a:hover { color: var(--text); }
+
+    nav a[href="saved.html"] {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.2rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .panel {
+      margin-top: 1.5rem;
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    .panel p {
+      margin: 0 0 0.75rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .saved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .saved-card {
+      background: radial-gradient(circle at top, #262649, #151522);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .saved-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .saved-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .saved-bio {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .chips {
+      margin-top: 0.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .chip {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .cta-note {
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-shell">
+      <div class="logo">Riffr • Saved</div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="browse.html">Browse</a>
+        <a href="profile.html">My Profile</a>
+        <a href="saved.html">Saved</a>
+        <a href="messages.html">Messages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Saved profiles</h1>
+      <p>
+        Your short list of collaborators to come back to later. In a future
+        prototype, you’ll be able to pin and sort these.
+      </p>
+    </div>
+
+    <section class="panel">
+      <h2>Shortlist</h2>
+      <p>These examples mirror the seed data you’re using elsewhere.</p>
+
+      <div class="saved-grid">
+        <article class="saved-card">
+          <div class="saved-name">Lana R.</div>
+          <div class="saved-role">Vocalist • Hip-hop / Rap</div>
+          <div class="saved-bio">
+            Hobbyist rapper looking for producers interested in storytelling
+            tracks and mellow boom-bap beats.
+          </div>
+          <div class="chips">
+            <span class="chip">Los Angeles, CA</span>
+            <span class="chip">Looking for producers</span>
+          </div>
+        </article>
+
+        <article class="saved-card">
+          <div class="saved-name">Marco B.</div>
+          <div class="saved-role">Producer • Trap &amp; hip-hop</div>
+          <div class="saved-bio">
+            Bedroom producer focused on hard-hitting drums and dark melodic
+            loops. Open to working with vocalists and rappers.
+          </div>
+          <div class="chips">
+            <span class="chip">Atlanta, GA</span>
+            <span class="chip">Beat packs ready</span>
+          </div>
+        </article>
+
+        <article class="saved-card">
+          <div class="saved-name">Ayana V.</div>
+          <div class="saved-role">Vocalist • R&amp;B</div>
+          <div class="saved-bio">
+            R&amp;B vocalist with some studio experience, looking for producers
+            who can blend soul and modern alt-R&amp;B.
+          </div>
+          <div class="chips">
+            <span class="chip">Chicago, IL</span>
+            <span class="chip">Top-line ideas</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="cta-note">
+        In Prototype 2 these cards are static. Later, this page will be powered
+        by your real saved profiles from Supabase.
+      </div>
+    </section>
+  </main>
+</body>
+</html>

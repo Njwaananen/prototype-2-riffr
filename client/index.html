@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riffr – Dashboard</title>
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #181824;
+      --accent: #8f5bff;
+      --accent-soft: rgba(143, 91, 255, 0.12);
+      --text: #f6f6ff;
+      --muted: #b5b5d0;
+      --border: #2c2c3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #202044 0, #050509 55%);
+      color: var(--text);
+    }
+
+    /* Top nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 15, 0.9),
+        rgba(5, 5, 15, 0.6)
+      );
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:first-child {
+      margin-left: 0;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    nav a[href="index.html"] {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.2rem;
+    }
+
+    /* Layout */
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.75rem;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--accent-soft), #17172a);
+      border-radius: 18px;
+      padding: 1.75rem 1.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin: 0 0 0.4rem;
+    }
+
+    .hero-subtitle {
+      margin: 0;
+      font-size: 0.98rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .hero-tags {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .hero-tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(5, 5, 15, 0.45);
+      color: var(--muted);
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.05rem;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* Stats cards */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.3rem;
+    }
+
+    @media (max-width: 700px) {
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .stat {
+      background: radial-gradient(circle at top, #262649, #151522);
+      border-radius: 12px;
+      padding: 0.75rem 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .stat-pill {
+      margin-top: 0.15rem;
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    /* Lists */
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .list-item {
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    .list-title {
+      font-size: 0.95rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .list-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.7rem;
+      margin-left: 0.25rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-shell">
+      <div class="logo">Riffr • Creator dashboard</div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="browse.html">Browse</a>
+        <a href="profile.html">My Profile</a>
+        <a href="saved.html">Saved</a>
+        <a href="messages.html">Messages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-eyebrow">Welcome back</div>
+      <h1 class="hero-title">Riffr – Dashboard</h1>
+      <p class="hero-subtitle">
+        Track your collaborations at a glance. When you’re ready to work,
+        jump back into a conversation or browse new artists to connect with.
+      </p>
+      <div class="hero-tags">
+        <span class="hero-tag">Producers</span>
+        <span class="hero-tag">Vocalists</span>
+        <span class="hero-tag">Mixing &amp; Mastering</span>
+        <span class="hero-tag">Songwriters</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <!-- Left column: stats & recent activity -->
+      <div class="panel">
+        <h2>Today in Riffr</h2>
+        <p>Quick snapshot of what’s happening in your collab world.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Active conversations</div>
+            <div class="stat-value">3</div>
+            <div class="stat-pill">2 waiting on you</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">New matches</div>
+            <div class="stat-value">5</div>
+            <div class="stat-pill">Based on your genres</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Saved profiles</div>
+            <div class="stat-value">8</div>
+            <div class="stat-pill">Shortlist for later</div>
+          </div>
+        </div>
+
+        <h2 style="margin-top: 1.25rem;">Recent activity</h2>
+        <ul class="list">
+          <li class="list-item">
+            <div class="list-title">
+              Message from <strong>Lana R.</strong>
+              <span class="chip">Hip-hop • Vocalist</span>
+            </div>
+            <div class="list-meta">
+              “Dropped a new verse on your beat idea – want feedback?”
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="list-title">
+              Beat pack from <strong>Marco B.</strong>
+              <span class="chip">Producer</span>
+            </div>
+            <div class="list-meta">
+              3 new beats added to your shared folder • 2 hours ago
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="list-title">
+              New follower: <strong>Ayana V.</strong>
+              <span class="chip">R&amp;B • Vocalist</span>
+            </div>
+            <div class="list-meta">
+              “Saw your last collab – loved the mix!”
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right column: quick actions / recommendations -->
+      <div class="panel">
+        <h2>Keep collaborating</h2>
+        <p>Jump back into a session or explore creators similar to your favorites.</p>
+
+        <ul class="list" style="margin-top: 0.9rem;">
+          <li class="list-item">
+            <div class="list-title">
+              Continue chat with <strong>Lana R.</strong>
+            </div>
+            <div class="list-meta">
+              Last message 32 min ago • Draft hook idea waiting for review
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="list-title">
+              Review collab request from <strong>Marco B.</strong>
+            </div>
+            <div class="list-meta">
+              Wants to start a 3-track EP • Trap &amp; melodic drill
+            </div>
+          </li>
+        </ul>
+
+        <h2 style="margin-top: 1.4rem;">Suggested collaborators</h2>
+        <ul class="list">
+          <li class="list-item">
+            <div class="list-title">
+              <strong>Nova Keys</strong>
+              <span class="chip">Keys • Neo-soul</span>
+            </div>
+            <div class="list-meta">
+              Frequently works with R&amp;B vocalists • 4 mutual saves
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="list-title">
+              <strong>Echo Lane</strong>
+              <span class="chip">Mixing • Alt-rock</span>
+            </div>
+            <div class="list-meta">
+              Mastered 12 projects similar to your last release
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
