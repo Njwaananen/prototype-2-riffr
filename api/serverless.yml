@@ -1,0 +1,20 @@
+service: riffr-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-west-2 # or whatever region your class uses
+  environment:
+    SUPABASE_URL: ${env:SUPABASE_URL}
+    SUPABASE_SERVICE_ROLE_KEY: ${env:SUPABASE_SERVICE_ROLE_KEY}
+    API_KEY: ${env:API_KEY}
+
+functions:
+  app:
+    handler: src/index.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+    # Optional but helpful:
+    # cors: true
