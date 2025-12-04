@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Riffr – Dashboard</title>
+  <title>Riffr – Discover</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root {
-      --bg: #0b0b12;
-      --bg-soft: #181824;
+      --bg: #050509;
+      --bg-soft: #151524;
+      --bg-softer: #10101a;
       --accent: #8f5bff;
-      --accent-soft: rgba(143, 91, 255, 0.12);
+      --accent-soft: rgba(143, 91, 255, 0.18);
       --text: #f6f6ff;
       --muted: #b5b5d0;
-      --border: #2c2c3a;
+      --border: #29293a;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -25,355 +25,392 @@
         sans-serif;
       background: radial-gradient(circle at top, #202044 0, #050509 55%);
       color: var(--text);
+      padding-bottom: 64px; /* space for bottom nav */
     }
 
-    /* Top nav */
+    /* Simple top app bar */
     header {
       position: sticky;
       top: 0;
       z-index: 10;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       background: linear-gradient(
         to bottom,
-        rgba(5, 5, 15, 0.9),
-        rgba(5, 5, 15, 0.6)
+        rgba(5, 5, 15, 0.96),
+        rgba(5, 5, 15, 0.78)
       );
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-shell {
-      max-width: 1100px;
+    .top-bar {
+      max-width: 700px;
       margin: 0 auto;
-      padding: 0.75rem 1.75rem;
+      padding: 0.7rem 1.1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 0.75rem;
     }
 
-    .logo {
-      font-weight: 700;
-      letter-spacing: 0.06em;
+    .app-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-title span:first-child {
+      font-size: 0.78rem;
       text-transform: uppercase;
-      font-size: 0.9rem;
+      letter-spacing: 0.18em;
       color: var(--muted);
     }
 
-    nav a {
-      margin-left: 1.5rem;
+    .app-title span:last-child {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .pill {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(5,5,15,0.65);
       color: var(--muted);
-      text-decoration: none;
-      font-size: 0.95rem;
+      white-space: nowrap;
     }
 
-    nav a:first-child {
-      margin-left: 0;
-    }
-
-    nav a:hover {
-      color: var(--text);
-    }
-
-    nav a[href="index.html"] {
-      color: var(--accent);
-      font-weight: 600;
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 0.2rem;
-    }
-
-    /* Layout */
     main {
-      max-width: 1100px;
-      margin: 1.5rem auto 3rem;
-      padding: 0 1.75rem;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 1.1rem 1.1rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .hero {
-      background: linear-gradient(135deg, var(--accent-soft), #17172a);
+      background: linear-gradient(135deg, var(--accent-soft), #161628);
       border-radius: 18px;
-      padding: 1.75rem 1.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      margin-bottom: 1.75rem;
+      padding: 1.3rem 1.2rem 1.35rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
     }
 
     .hero-eyebrow {
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       font-size: 0.7rem;
       color: var(--muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.2rem;
     }
 
     .hero-title {
-      font-size: 2.4rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin: 0 0 0.4rem;
+      margin: 0 0 0.25rem;
     }
 
     .hero-subtitle {
-      margin: 0;
-      font-size: 0.98rem;
-      color: var(--muted);
-      max-width: 580px;
-    }
-
-    .hero-tags {
-      margin-top: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      font-size: 0.78rem;
-    }
-
-    .hero-tag {
-      padding: 0.25rem 0.65rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(5, 5, 15, 0.45);
-      color: var(--muted);
-    }
-
-    /* Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 3fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 800px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .panel {
-      background: var(--bg-soft);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 1.25rem 1.4rem;
-    }
-
-    .panel h2 {
-      margin: 0 0 0.75rem;
-      font-size: 1.05rem;
-    }
-
-    .panel p {
       margin: 0;
       font-size: 0.9rem;
       color: var(--muted);
     }
 
-    /* Stats cards */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 0.3rem;
-    }
-
-    @media (max-width: 700px) {
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    .stat {
-      background: radial-gradient(circle at top, #262649, #151522);
-      border-radius: 12px;
-      padding: 0.75rem 0.8rem;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .stat-label {
+    .hero-tags {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
       font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
     }
 
-    .stat-value {
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
-    .stat-pill {
-      margin-top: 0.15rem;
-      font-size: 0.73rem;
+    .hero-tag {
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(5,5,15,0.55);
       color: var(--muted);
     }
 
-    /* Lists */
-    .list {
-      list-style: none;
-      padding: 0;
+    .section {
+      background: var(--bg-soft);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 1rem 1rem 0.85rem;
+    }
+
+    .section + .section {
+      margin-top: -0.1rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
       margin: 0;
-    }
-
-    .list-item {
-      padding: 0.65rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .list-item:last-child {
-      border-bottom: none;
-    }
-
-    .list-title {
-      font-size: 0.95rem;
-      margin-bottom: 0.15rem;
-    }
-
-    .list-meta {
       font-size: 0.8rem;
       color: var(--muted);
     }
 
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.7rem;
-      margin-left: 0.25rem;
+    .chip-link {
+      font-size: 0.78rem;
       color: var(--muted);
+      text-decoration: none;
+    }
+
+    .chip-link:hover {
+      color: var(--text);
+    }
+
+    .card-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .creator-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+      padding: 0.55rem 0.45rem;
+      border-radius: 12px;
+      background: var(--bg-softer);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .creator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .creator-name {
+      font-weight: 600;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+    }
+
+    .creator-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .creator-actions {
+      margin-top: 0.2rem;
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+    }
+
+    .btn-ghost {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .btn-ghost.secondary {
+      border-style: dashed;
+      color: var(--muted);
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(5,5,15,0.96);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.08rem;
+    }
+
+    .bottom-nav a span.icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .bottom-nav a.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-bottom: 72px;
+      }
+      .bottom-nav {
+        height: 60px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="nav-shell">
-      <div class="logo">Riffr • Creator dashboard</div>
-      <nav>
-        <a href="index.html">Dashboard</a>
-        <a href="browse.html">Browse</a>
-        <a href="profile.html">My Profile</a>
-        <a href="saved.html">Saved</a>
-        <a href="messages.html">Messages</a>
-      </nav>
+    <div class="top-bar">
+      <div class="app-title">
+        <span>Discover</span>
+        <span>Riffr</span>
+      </div>
+      <div class="pill">Prototype · sample data only</div>
     </div>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-eyebrow">Welcome back</div>
-      <h1 class="hero-title">Riffr – Dashboard</h1>
+      <h1 class="hero-title">Find your next collab</h1>
       <p class="hero-subtitle">
-        Track your collaborations at a glance. When you’re ready to work,
-        jump back into a conversation or browse new artists to connect with.
+        New creators, fresh beats, and vocalists that match your style. These cards
+        will be wired to live Supabase data in the deployed version.
       </p>
       <div class="hero-tags">
         <span class="hero-tag">Producers</span>
         <span class="hero-tag">Vocalists</span>
-        <span class="hero-tag">Mixing &amp; Mastering</span>
+        <span class="hero-tag">Mix &amp; master</span>
         <span class="hero-tag">Songwriters</span>
       </div>
     </section>
 
-    <section class="grid">
-      <!-- Left column: stats & recent activity -->
-      <div class="panel">
-        <h2>Today in Riffr</h2>
-        <p>Quick snapshot of what’s happening in your collab world.</p>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">Active conversations</div>
-            <div class="stat-value">3</div>
-            <div class="stat-pill">2 waiting on you</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">New matches</div>
-            <div class="stat-value">5</div>
-            <div class="stat-pill">Based on your genres</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Saved profiles</div>
-            <div class="stat-value">8</div>
-            <div class="stat-pill">Shortlist for later</div>
-          </div>
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Based on your saves</div>
+          <p class="section-subtitle">
+            Creators that sound similar to the profiles you’ve bookmarked.
+          </p>
         </div>
-
-        <h2 style="margin-top: 1.25rem;">Recent activity</h2>
-        <ul class="list">
-          <li class="list-item">
-            <div class="list-title">
-              Message from <strong>Lana R.</strong>
-              <span class="chip">Hip-hop • Vocalist</span>
-            </div>
-            <div class="list-meta">
-              “Dropped a new verse on your beat idea – want feedback?”
-            </div>
-          </li>
-          <li class="list-item">
-            <div class="list-title">
-              Beat pack from <strong>Marco B.</strong>
-              <span class="chip">Producer</span>
-            </div>
-            <div class="list-meta">
-              3 new beats added to your shared folder • 2 hours ago
-            </div>
-          </li>
-          <li class="list-item">
-            <div class="list-title">
-              New follower: <strong>Ayana V.</strong>
-              <span class="chip">R&amp;B • Vocalist</span>
-            </div>
-            <div class="list-meta">
-              “Saw your last collab – loved the mix!”
-            </div>
-          </li>
-        </ul>
+        <a href="#" class="chip-link">Edit genres</a>
       </div>
 
-      <!-- Right column: quick actions / recommendations -->
-      <div class="panel">
-        <h2>Keep collaborating</h2>
-        <p>Jump back into a session or explore creators similar to your favorites.</p>
+      <ul class="card-list">
+        <li class="creator-card">
+          <div class="creator-header">
+            <span class="creator-name">Nova Keys</span>
+            <span class="tag">Keys · Neo-soul</span>
+          </div>
+          <div class="creator-meta">
+            Frequently works with R&amp;B vocalists • 4 mutual saves
+          </div>
+          <div class="creator-actions">
+            <button class="btn-ghost">View profile</button>
+            <button class="btn-ghost secondary">Quick save</button>
+          </div>
+        </li>
 
-        <ul class="list" style="margin-top: 0.9rem;">
-          <li class="list-item">
-            <div class="list-title">
-              Continue chat with <strong>Lana R.</strong>
-            </div>
-            <div class="list-meta">
-              Last message 32 min ago • Draft hook idea waiting for review
-            </div>
-          </li>
-          <li class="list-item">
-            <div class="list-title">
-              Review collab request from <strong>Marco B.</strong>
-            </div>
-            <div class="list-meta">
-              Wants to start a 3-track EP • Trap &amp; melodic drill
-            </div>
-          </li>
-        </ul>
+        <li class="creator-card">
+          <div class="creator-header">
+            <span class="creator-name">Echo Lane</span>
+            <span class="tag">Mixing · Alt-rock</span>
+          </div>
+          <div class="creator-meta">
+            Mastered 12 projects similar to your last release
+          </div>
+          <div class="creator-actions">
+            <button class="btn-ghost">View profile</button>
+            <button class="btn-ghost secondary">Quick save</button>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-        <h2 style="margin-top: 1.4rem;">Suggested collaborators</h2>
-        <ul class="list">
-          <li class="list-item">
-            <div class="list-title">
-              <strong>Nova Keys</strong>
-              <span class="chip">Keys • Neo-soul</span>
-            </div>
-            <div class="list-meta">
-              Frequently works with R&amp;B vocalists • 4 mutual saves
-            </div>
-          </li>
-          <li class="list-item">
-            <div class="list-title">
-              <strong>Echo Lane</strong>
-              <span class="chip">Mixing • Alt-rock</span>
-            </div>
-            <div class="list-meta">
-              Mastered 12 projects similar to your last release
-            </div>
-          </li>
-        </ul>
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Recently active</div>
+          <p class="section-subtitle">
+            People who were online in the last 24 hours and match your collab
+            preferences.
+          </p>
+        </div>
       </div>
+
+      <ul class="card-list">
+        <li class="creator-card">
+          <div class="creator-header">
+            <span class="creator-name">Lana R.</span>
+            <span class="tag">Hip-hop · Vocalist</span>
+          </div>
+          <div class="creator-meta">
+            Open to hooks and features • 3 shared collaborators
+          </div>
+          <div class="creator-actions">
+            <button class="btn-ghost">Open messages</button>
+            <button class="btn-ghost secondary">View profile</button>
+          </div>
+        </li>
+
+        <li class="creator-card">
+          <div class="creator-header">
+            <span class="creator-name">Marco B.</span>
+            <span class="tag">Producer · Trap &amp; drill</span>
+          </div>
+          <div class="creator-meta">
+            Shared beat pack this week • 2 projects in progress
+          </div>
+          <div class="creator-actions">
+            <button class="btn-ghost">Open messages</button>
+            <button class="btn-ghost secondary">View profile</button>
+          </div>
+        </li>
+      </ul>
     </section>
   </main>
+
+  <!-- Bottom navigation: used on every page -->
+  <nav class="bottom-nav">
+    <a href="messages.html">
+      <span class="icon">💬</span>
+      <span>Messages</span>
+    </a>
+    <a href="index.html" class="active">
+      <span class="icon">🔍</span>
+      <span>Discover</span>
+    </a>
+    <a href="profile.html">
+      <span class="icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
 </body>
 </html>
