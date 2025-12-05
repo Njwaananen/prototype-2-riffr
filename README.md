@@ -179,6 +179,100 @@ the frontend automatically.
 
 ---
 
+## API Deployment (Lambda + API Gateway)
+
+- The Express app in the api/ directory is wrapped with serverless-http
+  (lambda entry file) so it can run as an AWS Lambda function behind an HTTP
+  API Gateway.
+- Serverless Framework configuration lives in api/serverless.yml and defines:
+  - service: riffr-api
+  - stage: dev
+  - region: us-west-2
+  - a single function (riffr-api-dev-app) that handles all HTTP routes.
+- Supabase configuration (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, API_KEY) is
+  loaded from Lambda environment variables in AWS and from a local .env file
+  for development. AWS Secrets Manager is not used in this prototype; env vars
+  are sufficient for the class deployment.
+- The API is deployed with Serverless using:
+
+      cd api
+      npx serverless deploy
+
+  (or equivalently npm run deploy if scripted in package.json).
+- The deployment exposes an HTTP API at:
+
+      https://swx5z75dob.execute-api.us-west-2.amazonaws.com/api
+
+- The frontend is configured to call this API base URL, and the deployed
+  Amplify site has been verified to load live data via /health, /profiles,
+  and /profiles/search/by-genre.
+
+---
+
+## Deployment, rollback & backups
+
+### Frontend (Amplify)
+
+- Amplify app: `prototype-2-riffr` (region: us-east-2)
+- Prod branch: `main`
+- URL: https://main.d2eqw1u0trx2o8.amplifyapp.com
+
+**Deploy:** push to `main` on GitHub:
+
+    git add .
+    git commit -m "Update Riffr prototype"
+    git push origin main
+
+Amplify watches the repo, runs the static build for `client/`, and deploys.
+
+**Rollback (frontend):**
+
+- In the Amplify console, open **prototype-2-riffr → Deployments**.
+- Find a previous known-good build.
+- Click **“Redeploy this version”** to roll back without changing code.
+
+### Backend (Serverless / Lambda / API Gateway)
+
+- Service: `riffr-api`
+- Stage: `dev`
+- Region: `us-west-2`
+- Lambda function: `riffr-api-dev-app`
+- HTTP API base URL: https://swx5z75dob.execute-api.us-west-2.amazonaws.com/api
+
+**Deploy (backend):**
+
+    cd api
+    npx serverless deploy
+
+**Rollback (backend):**
+
+1. List past deployments:
+
+       cd api
+       npx serverless deploy list
+
+2. Copy the desired `timestamp` from the list.
+
+3. Roll back:
+
+       npx serverless rollback --timestamp <TIMESTAMP>
+
+4. Verify after rollback:
+
+       export API_BASE="https://swx5z75dob.execute-api.us-west-2.amazonaws.com/api"
+       curl "$API_BASE/health"
+
+### Supabase backups
+
+- Database is hosted on Supabase (Postgres) in the Riffr prototype project.
+- Supabase provides automatic backups and point-in-time recovery.
+- Backup schedule can be viewed under **Project → Settings → Backups** in the
+  Supabase dashboard.
+- For this prototype, the default daily backup schedule is sufficient; a
+  production deployment would document a stricter backup and restore policy.
+
+---
+
 ## How to demo the prototype
 
 When grading or demoing, use the deployed Amplify URL.
@@ -220,6 +314,60 @@ are reachable from any other screen.
 
 ---
 
+## Monitoring & Security
+
+Logging and monitoring:
+
+- Lambda log group `/aws/lambda/riffr-api-dev-app` is configured in CloudWatch
+  with log retention set to 30 days.
+- Amplify access logs are available for the production frontend domain
+  (main.d2eqw1u0trx2o8.amplifyapp.com) for basic request auditing.
+
+Alerts:
+
+- A CloudWatch alarm on the `Errors` metric for `riffr-api-dev-app` triggers
+  when there are 10 or more Lambda errors in a 5-minute window. The alarm
+  notifies an SNS topic subscribed to the developer’s email.
+- Build and deployment status is monitored via the Amplify console and GitHub
+  notifications for pushes to the main branch.
+
+Supabase configuration:
+
+- Supabase Auth URL configuration has been set to match the deployed frontend:
+  - Site URL is configured as https://main.d2eqw1u0trx2o8.amplifyapp.com.
+  - Redirect URLs include the Amplify domain for future auth flows.
+- Row-level security (RLS) is not enforced on the demo `profiles` table so the
+  prototype can read all demo rows without authentication. A production version
+  would enable RLS and scope access per authenticated user.
+- Supabase email templates for magic-link / OTP flows are left at their
+  defaults because authentication is out of scope for this prototype. They
+  would be customized with Riffr branding and subject lines in a future
+  auth-enabled version.
+
+Secrets and configuration:
+
+- `.env` files are ignored via `.gitignore`; only `api/.env.example` is tracked
+  in Git, and it contains no real secrets.
+- Supabase URL, Supabase service role key, and API key are stored only in local
+  `.env` files and Lambda/Amplify environment variables, not in source control.
+
+CORS and access control:
+
+- For this prototype, CORS is configured permissively to simplify development.
+  In a production deployment, CORS would be restricted to the Amplify domain
+  and any other trusted origins.
+
+IAM and least privilege:
+
+- A dedicated IAM user (`riff-api-deployer`) is used for Serverless
+  deployments. This user currently has the AWS-managed `AdministratorAccess`
+  policy attached, which is broad but acceptable for a classroom prototype.
+- In a production setting, this deployer would be restricted to a custom
+  least-privilege policy that only permits the specific services required
+  (Lambda, API Gateway, CloudWatch, Amplify, and a secrets/parameter store).
+
+---
+
 ## Known limitations / future work
 
 - No authenticated user accounts yet; all data is demo data.
@@ -230,9 +378,14 @@ are reachable from any other screen.
 
 Future iterations would:
 
+- Add real auth and per-user profiles, using RLS and stricter CORS.
 - Persist profile updates and messages through the API.
 - Normalize genres and add follower / "save" relationships.
 - Add more robust filtering and recommendations.
+- Tighten IAM policies and CORS configuration for least-privilege, locked-down
+  production access.
+- Customize Supabase auth email templates and complete the end-to-end signup /
+  login flow.
 
 ---
 
