@@ -283,15 +283,48 @@
 
         <button type="submit">Save profile</button>
         <div class="note">
-          This save is local only in Prototype 2 – in a later prototype
-          it’ll write to your Riffr API.
+          Profile fields are loaded from the Riffr API using demo data. Saving is
+          still local-only in this prototype.
         </div>
       </form>
     </section>
   </main>
 
   <script>
+    const API_BASE = "https://swx5z75dob.execute-api.us-west-2.amazonaws.com/api"; // LIVE DATA API
     const form = document.getElementById("profile-form");
+
+    async function loadProfileFromApi() {
+      try {
+        const res = await fetch(`${API_BASE}/profiles`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const profiles = await res.json();
+        if (!Array.isArray(profiles) || !profiles.length) return;
+
+        const me = profiles[0];
+
+        if (me.display_name && form.elements["display_name"]) {
+          form.elements["display_name"].value = me.display_name;
+        }
+        if (me.headline && form.elements["headline"]) {
+          form.elements["headline"].value = me.headline;
+        }
+        if (me.bio && form.elements["bio"]) {
+          form.elements["bio"].value = me.bio;
+        }
+        if (me.location_text && form.elements["location_text"]) {
+          form.elements["location_text"].value = me.location_text;
+        }
+        if (me.primary_role && form.elements["primary_role"]) {
+          form.elements["primary_role"].value = me.primary_role;
+        }
+        if (me.genres && form.elements["genres"]) {
+          form.elements["genres"].value = me.genres;
+        }
+      } catch (err) {
+        console.error("Failed to load profile from API", err);
+      }
+    }
 
     form.addEventListener("submit", (e) => {
       if (!form.checkValidity()) {
@@ -302,8 +335,12 @@
         return;
       }
       e.preventDefault();
-      alert("Profile saved locally! (Client-side validation demo for Prototype 2)");
+      alert(
+        "Profile updated locally! In a future prototype this would save back through the Riffr API."
+      );
     });
+
+    document.addEventListener("DOMContentLoaded", loadProfileFromApi);
   </script>
 </body>
 </html>

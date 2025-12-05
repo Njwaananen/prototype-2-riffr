@@ -292,7 +292,7 @@
         <span>Discover</span>
         <span>Riffr</span>
       </div>
-      <div class="pill">Prototype · sample data only</div>
+      <div class="pill">Prototype · live Supabase data</div>
     </div>
   </header>
 
@@ -302,7 +302,7 @@
       <h1 class="hero-title">Find your next collab</h1>
       <p class="hero-subtitle">
         New creators, fresh beats, and vocalists that match your style. These cards
-        will be wired to live Supabase data in the deployed version.
+        are wired to live Supabase data in the deployed version.
       </p>
       <div class="hero-tags">
         <span class="hero-tag">Producers</span>
@@ -323,34 +323,8 @@
         <a href="#" class="chip-link">Edit genres</a>
       </div>
 
-      <ul class="card-list">
-        <li class="creator-card">
-          <div class="creator-header">
-            <span class="creator-name">Nova Keys</span>
-            <span class="tag">Keys · Neo-soul</span>
-          </div>
-          <div class="creator-meta">
-            Frequently works with R&amp;B vocalists • 4 mutual saves
-          </div>
-          <div class="creator-actions">
-            <button class="btn-ghost">View profile</button>
-            <button class="btn-ghost secondary">Quick save</button>
-          </div>
-        </li>
-
-        <li class="creator-card">
-          <div class="creator-header">
-            <span class="creator-name">Echo Lane</span>
-            <span class="tag">Mixing · Alt-rock</span>
-          </div>
-          <div class="creator-meta">
-            Mastered 12 projects similar to your last release
-          </div>
-          <div class="creator-actions">
-            <button class="btn-ghost">View profile</button>
-            <button class="btn-ghost secondary">Quick save</button>
-          </div>
-        </li>
+      <ul class="card-list" id="based-on-saves">
+        <!-- populated from Riffr API -->
       </ul>
     </section>
 
@@ -365,60 +339,33 @@
         </div>
       </div>
 
-      <ul class="card-list">
-        <li class="creator-card">
-          <div class="creator-header">
-            <span class="creator-name">Lana R.</span>
-            <span class="tag">Hip-hop · Vocalist</span>
-          </div>
-          <div class="creator-meta">
-            Open to hooks and features • 3 shared collaborators
-          </div>
-          <div class="creator-actions">
-            <button class="btn-ghost">Open messages</button>
-            <button class="btn-ghost secondary">View profile</button>
-          </div>
-        </li>
-
-        <li class="creator-card">
-          <div class="creator-header">
-            <span class="creator-name">Marco B.</span>
-            <span class="tag">Producer · Trap &amp; drill</span>
-          </div>
-          <div class="creator-meta">
-            Shared beat pack this week • 2 projects in progress
-          </div>
-          <div class="creator-actions">
-            <button class="btn-ghost">Open messages</button>
-            <button class="btn-ghost secondary">View profile</button>
-          </div>
-        </li>
+      <ul class="card-list" id="recently-active">
+        <!-- populated from Riffr API -->
       </ul>
     </section>
   </main>
 
-<nav class="bottom-nav">
-  <a href="messages.html">
-    <span class="icon">💬</span>
-    <span>Messages</span>
-  </a>
-  <a href="index.html" class="active">
-    <span class="icon">🔍</span>
-    <span>Discover</span>
-  </a>
-  <a href="browse.html">
-    <span class="icon">🧭</span>
-    <span>Browse</span>
-  </a>
-  <a href="profile.html">
-    <span class="icon">👤</span>
-    <span>Profile</span>
-  </a>
-</nav>
-
+  <nav class="bottom-nav">
+    <a href="messages.html">
+      <span class="icon">💬</span>
+      <span>Messages</span>
+    </a>
+    <a href="index.html" class="active">
+      <span class="icon">🔍</span>
+      <span>Discover</span>
+    </a>
+    <a href="browse.html">
+      <span class="icon">🧭</span>
+      <span>Browse</span>
+    </a>
+    <a href="profile.html">
+      <span class="icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
 
   <script>
-    const API_BASE = "https://swx5z75dob.execute-api.us-west-2.amazonaws.com";
+    const API_BASE = "https://swx5z75dob.execute-api.us-west-2.amazonaws.com/api"; // LIVE DATA API
 
     async function loadDashboard() {
       const basedEl = document.getElementById("based-on-saves");
@@ -427,17 +374,20 @@
       if (!basedEl || !recentEl) return;
 
       // simple loading state
-      basedEl.innerHTML = '<li class="creator-card"><div class="creator-meta">Loading recommendations…</div></li>';
-      recentEl.innerHTML = '<li class="creator-card"><div class="creator-meta">Loading activity…</div></li>';
+      basedEl.innerHTML =
+        '<li class="creator-card"><div class="creator-meta">Loading recommendations…</div></li>';
+      recentEl.innerHTML =
+        '<li class="creator-card"><div class="creator-meta">Loading activity…</div></li>';
 
       try {
-        const res = await fetch(`${API_BASE}/api/profiles`);
+        const res = await fetch(`${API_BASE}/profiles`);
         if (!res.ok) throw new Error(`API error ${res.status}`);
         const profiles = await res.json();
 
         if (!profiles.length) {
-          basedEl.innerHTML = '<li class="creator-card"><div class="creator-meta">No profiles found. Seed data in Supabase.</div></li>';
-          recentEl.innerHTML = '';
+          basedEl.innerHTML =
+            '<li class="creator-card"><div class="creator-meta">No profiles found. Seed data in Supabase.</div></li>';
+          recentEl.innerHTML = "";
           return;
         }
 
@@ -476,8 +426,9 @@
         `).join("");
       } catch (err) {
         console.error(err);
-        basedEl.innerHTML = '<li class="creator-card"><div class="creator-meta">Could not load data from the API.</div></li>';
-        recentEl.innerHTML = '';
+        basedEl.innerHTML =
+          '<li class="creator-card"><div class="creator-meta">Could not load data from the Riffr API.</div></li>';
+        recentEl.innerHTML = "";
       }
     }
 
